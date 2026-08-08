@@ -1,0 +1,1357 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<title>Swrnymx7 &amp; UI/UX</title>
+		<link
+			rel="preconnect"
+			href="https://fonts.googleapis.com"
+		/>
+		<link
+			rel="preconnect"
+			href="https://fonts.gstatic.com"
+			crossorigin
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			:root {
+				--graphite-950: #1c1c1c;
+				--graphite-850: #151517;
+				--graphite-700: #232326;
+				--graphite-600: #333338;
+				--bone: #f1efe9;
+				--fog: #8d8d92;
+				--amber-500: #d9954a;
+				--amber-300: #f0c583;
+				--ease: cubic-bezier(0.16, 0.8, 0.24, 1);
+			}
+
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+			html {
+				scroll-behavior: smooth;
+			}
+			body {
+				background: var(--graphite-950);
+				color: var(--bone);
+				font-family: "Inter", sans-serif;
+				overflow-x: hidden;
+				cursor: default;
+			}
+			::selection {
+				background: var(--amber-500);
+				color: var(--graphite-950);
+			}
+
+			.noise {
+				position: fixed;
+				inset: 0;
+				pointer-events: none;
+				z-index: 200;
+				opacity: 0.035;
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+				mix-blend-mode: overlay;
+			}
+
+			header {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				z-index: 100;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 28px 48px;
+				mix-blend-mode: difference;
+			}
+			.mark {
+				font-family: "Fraunces", serif;
+				font-weight: 500;
+				font-size: 15px;
+				letter-spacing: 0.02em;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				color: var(--bone);
+			}
+			.mark .dot {
+				color: var(--amber-500);
+			}
+			nav ul {
+				list-style: none;
+				display: flex;
+				gap: 36px;
+			}
+			nav a {
+				color: var(--bone);
+				text-decoration: none;
+				font-size: 13px;
+				letter-spacing: 0.03em;
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				position: relative;
+			}
+			nav a span.n {
+				font-family: "JetBrains Mono", monospace;
+				font-size: 10px;
+				color: var(--fog);
+			}
+			nav a::after {
+				content: "";
+				position: absolute;
+				left: 0;
+				bottom: -4px;
+				width: 0;
+				height: 1px;
+				background: var(--amber-500);
+				transition: width 0.4s var(--ease);
+			}
+			nav a:hover::after {
+				width: 100%;
+			}
+
+			.hero {
+				position: relative;
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				padding: 0 48px;
+				overflow: hidden;
+			}
+			#net {
+				position: absolute;
+				inset: 0;
+				z-index: 0;
+				opacity: 0.55;
+			}
+			.orbit {
+				position: absolute;
+				top: 50%;
+				right: 2%;
+				width: min(48vw, 640px);
+				height: min(48vw, 640px);
+				transform: translateY(-50%);
+				z-index: 1;
+			}
+			.orbit-item {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 92px;
+				height: 118px;
+				margin: -59px 0 0 -46px;
+				border-radius: 3px;
+				overflow: hidden;
+				cursor: pointer;
+				border: 1px solid var(--graphite-600);
+				box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+				transition:
+					width 0.35s var(--ease),
+					height 0.35s var(--ease),
+					margin 0.35s var(--ease),
+					z-index 0s;
+			}
+			.orbit-item img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				display: block;
+				filter: grayscale(0.4) brightness(0.75);
+				transition: filter 0.4s var(--ease);
+			}
+			.orbit-item:hover {
+				width: 190px;
+				height: 236px;
+				margin: -118px 0 0 -95px;
+				z-index: 20;
+			}
+			.orbit-item:hover img {
+				filter: grayscale(0) brightness(1);
+			}
+			.orbit-item .oi-label {
+				position: absolute;
+				left: 9px;
+				bottom: 7px;
+				z-index: 2;
+				font-family: "JetBrains Mono", monospace;
+				font-size: 10px;
+				color: var(--bone);
+				opacity: 0;
+				transition: opacity 0.3s;
+				text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+				white-space: nowrap;
+			}
+			.orbit-item:hover .oi-label {
+				opacity: 1;
+			}
+			.orbit-center {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				width: 2px;
+				height: 2px;
+				border-radius: 50%;
+				background: var(--amber-500);
+				box-shadow:
+					0 0 0 1px var(--graphite-600),
+					0 0 60px 30px rgba(217, 149, 74, 0.06);
+			}
+			@media (max-width: 960px) {
+				.orbit {
+					display: none;
+				}
+			}
+			.hero-inner {
+				position: relative;
+				z-index: 2;
+				max-width: 1180px;
+			}
+			.eyebrow {
+				font-family: "JetBrains Mono", monospace;
+				font-size: 12px;
+				letter-spacing: 0.15em;
+				color: var(--amber-500);
+				text-transform: uppercase;
+				margin-bottom: 28px;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+			.eyebrow::before {
+				content: "";
+				width: 28px;
+				height: 1px;
+				background: var(--amber-500);
+			}
+			h1.display {
+				font-family: "Fraunces", serif;
+				font-weight: 300;
+				font-size: clamp(48px, 8.4vw, 124px);
+				line-height: 0.98;
+				letter-spacing: -0.01em;
+				max-width: 1100px;
+			}
+			h1.display em {
+				font-style: italic;
+				font-weight: 400;
+				color: var(--amber-300);
+			}
+			.hero-sub {
+				margin-top: 32px;
+				max-width: 520px;
+				font-size: 16px;
+				line-height: 1.7;
+				color: var(--fog);
+				font-weight: 300;
+			}
+			.scroll-cue {
+				position: absolute;
+				bottom: 40px;
+				left: 48px;
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				font-family: "JetBrains Mono", monospace;
+				font-size: 11px;
+				color: var(--fog);
+				letter-spacing: 0.08em;
+			}
+			.scroll-cue .line {
+				width: 1px;
+				height: 40px;
+				background: linear-gradient(var(--fog), transparent);
+				animation: pulse 2s infinite;
+			}
+			@keyframes pulse {
+				0%,
+				100% {
+					opacity: 0.3;
+				}
+				50% {
+					opacity: 1;
+				}
+			}
+
+			section {
+				padding: 160px 48px;
+				position: relative;
+			}
+			.section-head {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-end;
+				margin-bottom: 80px;
+				border-bottom: 1px solid var(--graphite-700);
+				padding-bottom: 28px;
+			}
+			.section-head h2 {
+				font-family: "Fraunces", serif;
+				font-weight: 300;
+				font-size: clamp(30px, 4vw, 52px);
+			}
+			.section-head .count {
+				font-family: "JetBrains Mono", monospace;
+				color: var(--fog);
+				font-size: 13px;
+			}
+			.reveal {
+				opacity: 0;
+				transform: translateY(40px);
+				transition:
+					opacity 1s var(--ease),
+					transform 1s var(--ease);
+			}
+			.reveal.in {
+				opacity: 1;
+				transform: translateY(0);
+			}
+
+			.work-carousel-wrap {
+				position: relative;
+				width: 100%;
+				overflow: hidden;
+				padding: 34px 0 54px;
+			}
+			.work-grid {
+				display: flex;
+				align-items: center;
+				gap: 28px;
+				overflow-x: auto;
+				overflow-y: hidden;
+				scroll-snap-type: x mandatory;
+				scroll-behavior: smooth;
+				-webkit-overflow-scrolling: touch;
+				padding: 38px calc((100% - min(520px, 78vw)) / 2) 46px;
+				margin: 0;
+				background: transparent;
+				scrollbar-width: none;
+				overscroll-behavior-x: contain;
+				touch-action: pan-y;
+			}
+			.work-grid::-webkit-scrollbar {
+				display: none;
+			}
+			.work-grid.is-dragging {
+				cursor: grabbing;
+				scroll-snap-type: none;
+			}
+			.work-grid:not(.is-dragging) {
+				cursor: grab;
+			}
+
+			.work-item {
+				position: relative;
+				flex: 0 0 min(520px, 78vw);
+				height: min(650px, 78vw);
+				min-height: 470px;
+				display: block;
+				text-decoration: none;
+				color: var(--bone);
+				background: var(--graphite-950);
+				overflow: hidden;
+				border: 1px solid var(--graphite-700);
+				border-radius: 6px;
+				scroll-snap-align: center;
+				transform: scale(0.84);
+				filter: blur(5px);
+				opacity: 0.34;
+				transition:
+					transform 0.65s var(--ease),
+					filter 0.65s var(--ease),
+					opacity 0.65s var(--ease),
+					box-shadow 0.65s var(--ease);
+				box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+			}
+			.work-item.is-near {
+				transform: scale(0.91);
+				filter: blur(2.5px);
+				opacity: 0.62;
+			}
+			.work-item.is-active {
+				transform: scale(1);
+				filter: blur(0);
+				opacity: 1;
+				border-color: var(--graphite-600);
+				box-shadow: 0 34px 100px rgba(0, 0, 0, 0.58);
+			}
+			.work-item .frame {
+				position: absolute;
+				inset: 0;
+				overflow: hidden;
+				background: var(--graphite-950);
+			}
+			.work-item img {
+				width: 100%;
+				height: 100%;
+				object-fit: contain;
+				display: block;
+				background: var(--graphite-950);
+				filter: grayscale(0.18) brightness(0.82);
+				transition:
+					transform 0.8s var(--ease),
+					filter 0.6s var(--ease);
+			}
+			.work-item.is-active img {
+				filter: grayscale(0) brightness(0.98);
+			}
+			.work-item:hover img {
+				transform: scale(1.025);
+				filter: grayscale(0) brightness(1);
+			}
+			/* No project names or text over the artwork. */
+			.work-item .veil,
+			.work-item .info,
+			.work-item .idx {
+				display: none;
+			}
+
+			.carousel-nav {
+				position: absolute;
+				top: 50%;
+				transform: translateY(-50%);
+				width: 52px;
+				height: 52px;
+				border: 1px solid var(--graphite-600);
+				border-radius: 50%;
+				background: rgba(12, 12, 13, 0.82);
+				backdrop-filter: blur(10px);
+				color: var(--bone);
+				font-size: 24px;
+				z-index: 10;
+				cursor: pointer;
+				transition:
+					transform 0.3s var(--ease),
+					background 0.3s,
+					color 0.3s;
+			}
+			.carousel-nav:hover {
+				background: var(--amber-500);
+				color: var(--graphite-950);
+				transform: translateY(-50%) scale(1.08);
+			}
+			.carousel-nav.prev {
+				left: 18px;
+			}
+			.carousel-nav.next {
+				right: 18px;
+			}
+
+			@media (max-width: 860px) {
+				.work-grid {
+					padding-left: calc((100% - 82vw) / 2);
+					padding-right: calc((100% - 82vw) / 2);
+				}
+				.work-item {
+					flex-basis: 82vw;
+					height: 105vw;
+					min-height: 430px;
+				}
+			}
+			@media (max-width: 520px) {
+				.work-grid {
+					gap: 14px;
+				}
+				.work-item {
+					flex-basis: 86vw;
+					height: 112vw;
+					min-height: 0;
+				}
+				.carousel-nav {
+					width: 42px;
+					height: 42px;
+				}
+				.carousel-nav.prev {
+					left: 8px;
+				}
+				.carousel-nav.next {
+					right: 8px;
+				}
+			}
+
+			.about {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 80px;
+				align-items: start;
+			}
+			.about p {
+				font-size: 20px;
+				line-height: 1.75;
+				font-weight: 300;
+				color: var(--bone);
+				margin-bottom: 24px;
+			}
+			.about p .hl {
+				color: var(--amber-300);
+				font-style: italic;
+				font-family: "Fraunces", serif;
+			}
+			.stack {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+				margin-top: 20px;
+			}
+			.stack span {
+				font-family: "JetBrains Mono", monospace;
+				font-size: 11px;
+				border: 1px solid var(--graphite-600);
+				padding: 7px 12px;
+				border-radius: 100px;
+				color: var(--fog);
+			}
+
+			footer {
+				padding: 100px 48px 60px;
+				border-top: 1px solid var(--graphite-700);
+			}
+			.foot-big {
+				font-family: "Fraunces", serif;
+				font-weight: 300;
+				font-size: clamp(52px, 11vw, 180px);
+				line-height: 0.85;
+				letter-spacing: -0.02em;
+				color: var(--graphite-700);
+				-webkit-text-stroke: 1px var(--graphite-600);
+			}
+			.foot-row {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-top: 40px;
+				font-size: 13px;
+				color: var(--fog);
+				flex-wrap: wrap;
+				gap: 16px;
+			}
+			.foot-row a {
+				color: var(--bone);
+				text-decoration: none;
+				border-bottom: 1px solid var(--graphite-600);
+			}
+			.foot-row a:hover {
+				color: var(--amber-500);
+				border-color: var(--amber-500);
+			}
+
+			@media (max-width: 860px) {
+				header {
+					padding: 20px 24px;
+				}
+				nav ul {
+					gap: 18px;
+				}
+				nav a span.n {
+					display: none;
+				}
+				.hero {
+					padding: 0 24px;
+				}
+				section {
+					padding: 100px 24px;
+				}
+				.work-item {
+					grid-template-columns: 36px 1fr;
+					row-gap: 6px;
+				}
+				.work-item .tag,
+				.work-item .arrow {
+					display: none;
+				}
+				.about {
+					grid-template-columns: 1fr;
+					gap: 40px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="noise"></div>
+
+		<header>
+			<div class="mark">SWRNYMX7<span class="dot">·</span>D</div>
+			<nav>
+				<ul>
+					<li>
+						<a href="#work"><span class="n">01</span>Work</a>
+					</li>
+					<li>
+						<a href="#about"><span class="n">02</span>About</a>
+					</li>
+				</ul>
+			</nav>
+		</header>
+
+		<section class="hero">
+			<canvas id="net"></canvas>
+			<div
+				class="orbit"
+				id="orbit"
+			>
+				<div class="orbit-center"></div>
+				<div
+					class="orbit-item"
+					data-key="rockstar"
+				>
+					<img
+						data-key="rockstar"
+						alt="Crowned"
+					/><span class="oi-label">Crowned</span>
+				</div>
+				<div
+					class="orbit-item"
+					data-key="swapnil"
+				>
+					<img
+						data-key="swapnil"
+						alt="Swapnil"
+					/><span class="oi-label">Swapnil</span>
+				</div>
+				<div
+					class="orbit-item"
+					data-key="manipulation"
+				>
+					<img
+						data-key="manipulation"
+						alt="Manipulation"
+					/><span class="oi-label">Manipulation</span>
+				</div>
+				<div
+					class="orbit-item"
+					data-key="lookoflove"
+				>
+					<img
+						data-key="lookoflove"
+						alt="Look of Love"
+					/><span class="oi-label">Look of Love</span>
+				</div>
+				<div
+					class="orbit-item"
+					data-key="reflections"
+				>
+					<img
+						data-key="reflections"
+						alt="Reflections"
+					/><span class="oi-label">Reflections</span>
+				</div>
+				<div
+					class="orbit-item"
+					data-key="eye"
+				>
+					<img
+						data-key="eye"
+						alt="Eye"
+					/><span class="oi-label">Eye</span>
+				</div>
+			</div>
+			<div class="hero-inner">
+				<div class="eyebrow">
+					Graphic Design — UI/UX — Based in Nepal
+				</div>
+				<h1 class="display">
+					From <em>creative</em> <br />concepts to considered,<br />digital
+					<em>experience</em>.
+				</h1>
+				<p class="hero-sub">
+					I'm Swarnim — a graphic designer working across poster
+					design, photo manipulation, and digital art, currently
+					building out product and UI/UX work alongside it.
+				</p>
+			</div>
+			<div class="scroll-cue">
+				<div class="line"></div>
+				SCROLL
+			</div>
+		</section>
+
+		<section id="work">
+			<div class="section-head reveal">
+				<h2>Selected Work</h2>
+				<span class="count">(14)</span>
+			</div>
+			<div class="work-carousel-wrap reveal">
+				<button
+					class="carousel-nav prev"
+					type="button"
+					aria-label="Previous project"
+				>
+					‹
+				</button>
+				<div
+					class="work-grid"
+					id="workList"
+					aria-label="Selected work carousel"
+				>
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="eye"
+								alt="Eye"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">01</span>
+						<div class="info">
+							<div>
+								<h3>Eye</h3>
+								<span class="tag"
+									>Halftone Illustration · Pop Art</span
+								>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="swapnil"
+								alt="Swapnil"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">02</span>
+						<div class="info">
+							<div>
+								<h3>Swapnil</h3>
+								<span class="tag"
+									>Concert Poster · Composite</span
+								>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="manipulation"
+								alt="Manipulation"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">03</span>
+						<div class="info">
+							<div>
+								<h3>Manipulation</h3>
+								<span class="tag"
+									>Surreal Photo Manipulation</span
+								>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="lookoflove"
+								alt="Look of Love"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">04</span>
+						<div class="info">
+							<div>
+								<h3>Look of Love</h3>
+								<span class="tag"
+									>Portrait Retouch · Poster</span
+								>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="reflections"
+								alt="Reflections"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">05</span>
+						<div class="info">
+							<div>
+								<h3>Reflections</h3>
+								<span class="tag"
+									>Double Exposure · Portrait</span
+								>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="rockstar"
+								alt="Crowned"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">06</span>
+						<div class="info">
+							<div>
+								<h3>Crowned</h3>
+								<span class="tag"
+									>Photo Manipulation · Poster Art</span
+								>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="one"
+								alt="One"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">07</span>
+						<div class="info">
+							<div>
+								<h3>One</h3>
+								<span class="tag">Graphic Design</span>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="two"
+								alt="Two"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">08</span>
+						<div class="info">
+							<div>
+								<h3>Two</h3>
+								<span class="tag">Graphic Design</span>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="three"
+								alt="Three"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">09</span>
+						<div class="info">
+							<div>
+								<h3>Three</h3>
+								<span class="tag">Graphic Design</span>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="four"
+								alt="Four"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">10</span>
+						<div class="info">
+							<div>
+								<h3>Four</h3>
+								<span class="tag">Graphic Design</span>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="five"
+								alt="Five"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">11</span>
+						<div class="info">
+							<div>
+								<h3>Five</h3>
+								<span class="tag">Graphic Design</span>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="six"
+								alt="Six"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">12</span>
+						<div class="info">
+							<div>
+								<h3>Six</h3>
+								<span class="tag">Graphic Design</span>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="seven"
+								alt="Seven"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">13</span>
+						<div class="info">
+							<div>
+								<h3>Seven</h3>
+								<span class="tag">Graphic Design</span>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+
+					<a
+						class="work-item"
+						href="#"
+					>
+						<div class="frame">
+							<img
+								data-key="tattoo"
+								alt="Tattoo"
+							/>
+						</div>
+						<div class="veil"></div>
+						<span class="idx">14</span>
+						<div class="info">
+							<div>
+								<h3>Tattoo</h3>
+								<span class="tag"
+									>Graphic Design · Poster Art</span
+								>
+							</div>
+							<span class="arrow">↗</span>
+						</div>
+					</a>
+				</div>
+				<button
+					class="carousel-nav next"
+					type="button"
+					aria-label="Next project"
+				>
+					›
+				</button>
+				<div class="carousel-hint">drag / scroll to explore</div>
+			</div>
+		</section>
+
+		<section id="about">
+			<div class="section-head reveal">
+				<h2>About</h2>
+				<span class="count">(02)</span>
+			</div>
+			<div class="about reveal">
+				<div>
+					<p>
+						I've spent the last while deep in
+						<span class="hl"
+							>photo manipulation, poster design, and visual
+							composites</span
+						>
+						— building mood and narrative out of layers, light, and
+						color grading.
+					</p>
+					<p>
+						I'm now expanding into UI/UX and product design, while
+						continuing to take on graphic design and creative
+						direction work.
+					</p>
+				</div>
+				<div>
+					<div class="stack">
+						<span>Photoshop</span><span>Photo Manipulation</span
+						><span>Poster Design</span> <span>Figma</span
+						><span>UI/UX</span><span>Brand Identity</span
+						><span>Color Grading</span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<footer>
+			<div class="foot-big">SWARNIM</div>
+			<div class="foot-row">
+				<span>© 2026 — Available for select projects</span>
+				<a href="mailto:swrnymx7@gmail.com">swrnymx7@gmail.com</a>
+				<span>Biratnagar, Nepal — 001</span>
+			</div>
+		</footer>
+
+		<script>
+			const IMG_DATA = {
+				rockstar: "images/RIDESH 2 GRAPHICS 1.png",
+				swapnil: "images/Swapnil shadows.png",
+				manipulation: "images/Manipulation.png",
+				lookoflove: "images/look of love red.png",
+				reflections: "images/khaikho.jpg",
+				eye: "images/Eye stretched.png",
+				one: "images/one.jpg",
+				two: "images/two.jpg",
+				three: "images/three.jpg",
+				four: "images/four.jpg",
+				five: "images/five.jpg",
+				six: "images/six.jpg",
+				seven: "images/seven.jpg",
+				tattoo: "images/Tattoo.png",
+			};
+			document.querySelectorAll("img[data-key]").forEach(img => {
+				img.src = IMG_DATA[img.dataset.key];
+			});
+
+			const io = new IntersectionObserver(
+				entries => {
+					entries.forEach(e => {
+						if (e.isIntersecting) e.target.classList.add("in");
+					});
+				},
+				{ threshold: 0.15 },
+			);
+			document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+			/* Selected Work: infinite centered carousel with depth blur */
+			(function () {
+				const carousel = document.getElementById("workList");
+				if (!carousel) return;
+
+				let cards = Array.from(carousel.querySelectorAll(".work-item"));
+				const prev = document.querySelector(".carousel-nav.prev");
+				const next = document.querySelector(".carousel-nav.next");
+				if (!cards.length) return;
+
+				// Clone the last and first cards so the carousel is never empty at either edge.
+				const firstClone = cards[0].cloneNode(true);
+				const lastClone = cards[cards.length - 1].cloneNode(true);
+				firstClone.classList.add("carousel-clone");
+				lastClone.classList.add("carousel-clone");
+				carousel.insertBefore(lastClone, cards[0]);
+				carousel.appendChild(firstClone);
+				cards = Array.from(carousel.querySelectorAll(".work-item"));
+
+				const realCount = cards.length - 2;
+				let activeIndex = 1;
+				let raf = null;
+				let correcting = false;
+
+				function updateDepth() {
+					raf = null;
+					const center =
+						carousel.scrollLeft + carousel.clientWidth / 2;
+
+					cards.forEach((card, index) => {
+						const cardCenter =
+							card.offsetLeft + card.offsetWidth / 2;
+						const distance = Math.abs(center - cardCenter);
+						const maxDistance = carousel.clientWidth * 0.78;
+						const ratio = Math.min(distance / maxDistance, 1);
+
+						card.classList.toggle(
+							"is-active",
+							distance < card.offsetWidth * 0.28,
+						);
+						card.classList.toggle(
+							"is-near",
+							distance >= card.offsetWidth * 0.28 &&
+								distance < card.offsetWidth * 0.95,
+						);
+						card.style.setProperty("--distance", ratio.toFixed(3));
+
+						if (distance < card.offsetWidth * 0.28)
+							activeIndex = index;
+					});
+				}
+
+				function requestDepthUpdate() {
+					if (!raf) raf = requestAnimationFrame(updateDepth);
+				}
+
+				function centerCard(card, smooth = true) {
+					card.scrollIntoView({
+						behavior: smooth ? "smooth" : "auto",
+						block: "nearest",
+						inline: "center",
+					});
+				}
+
+				function goTo(index) {
+					if (correcting) return;
+					activeIndex = Math.max(
+						0,
+						Math.min(index, cards.length - 1),
+					);
+					centerCard(cards[activeIndex], true);
+				}
+
+				function correctInfiniteEdge() {
+					if (correcting) return;
+
+					if (activeIndex === 0) {
+						correcting = true;
+						requestAnimationFrame(() => {
+							activeIndex = realCount;
+							centerCard(cards[realCount], false);
+							requestDepthUpdate();
+							correcting = false;
+						});
+					} else if (activeIndex === cards.length - 1) {
+						correcting = true;
+						requestAnimationFrame(() => {
+							activeIndex = 1;
+							centerCard(cards[1], false);
+							requestDepthUpdate();
+							correcting = false;
+						});
+					}
+				}
+
+				carousel.addEventListener(
+					"scroll",
+					() => {
+						requestDepthUpdate();
+						clearTimeout(carousel._snapTimer);
+						carousel._snapTimer = setTimeout(
+							correctInfiniteEdge,
+							140,
+						);
+					},
+					{ passive: true },
+				);
+
+				window.addEventListener("resize", requestDepthUpdate);
+				prev?.addEventListener("click", () => goTo(activeIndex - 1));
+				next?.addEventListener("click", () => goTo(activeIndex + 1));
+
+				carousel.addEventListener("keydown", e => {
+					if (e.key === "ArrowLeft") {
+						e.preventDefault();
+						goTo(activeIndex - 1);
+					}
+					if (e.key === "ArrowRight") {
+						e.preventDefault();
+						goTo(activeIndex + 1);
+					}
+				});
+
+				// Do NOT hijack the mouse wheel: normal vertical page scrolling remains available.
+				// Shift + wheel can still be used by browsers/trackpads for horizontal scrolling.
+
+				// Drag with mouse on desktop.
+				let dragging = false;
+				let dragStartX = 0;
+				let dragStartScroll = 0;
+
+				carousel.addEventListener("pointerdown", e => {
+					if (e.pointerType === "mouse" && e.button !== 0) return;
+					dragging = true;
+					dragStartX = e.clientX;
+					dragStartScroll = carousel.scrollLeft;
+					carousel.setPointerCapture?.(e.pointerId);
+					carousel.classList.add("is-dragging");
+				});
+
+				carousel.addEventListener("pointermove", e => {
+					if (!dragging) return;
+					carousel.scrollLeft =
+						dragStartScroll - (e.clientX - dragStartX);
+				});
+
+				function stopDrag() {
+					dragging = false;
+					carousel.classList.remove("is-dragging");
+				}
+
+				carousel.addEventListener("pointerup", stopDrag);
+				carousel.addEventListener("pointercancel", stopDrag);
+				carousel.addEventListener("lostpointercapture", stopDrag);
+
+				// Start with the first real artwork centered and the LAST artwork visible on its left.
+				requestDepthUpdate();
+				setTimeout(() => {
+					activeIndex = 1;
+					centerCard(cards[1], false);
+					requestDepthUpdate();
+				}, 80);
+			})();
+
+			const canvas = document.getElementById("net");
+			const ctx = canvas.getContext("2d");
+			let w, h, points;
+			function resize() {
+				w = canvas.width = canvas.offsetWidth;
+				h = canvas.height = canvas.offsetHeight;
+			}
+			function initPoints() {
+				const count = Math.floor((w * h) / 26000);
+				points = Array.from({ length: count }, () => ({
+					x: Math.random() * w,
+					y: Math.random() * h,
+					vx: (Math.random() - 0.5) * 0.3,
+					vy: (Math.random() - 0.5) * 0.3,
+				}));
+			}
+			function tick() {
+				ctx.clearRect(0, 0, w, h);
+				points.forEach(p => {
+					p.x += p.vx;
+					p.y += p.vy;
+					if (p.x < 0 || p.x > w) p.vx *= -1;
+					if (p.y < 0 || p.y > h) p.vy *= -1;
+				});
+				for (let i = 0; i < points.length; i++) {
+					for (let j = i + 1; j < points.length; j++) {
+						const dx = points[i].x - points[j].x,
+							dy = points[i].y - points[j].y;
+						const dist = Math.sqrt(dx * dx + dy * dy);
+						if (dist < 140) {
+							ctx.strokeStyle = `rgba(217,149,74,${(1 - dist / 140) * 0.35})`;
+							ctx.lineWidth = 1;
+							ctx.beginPath();
+							ctx.moveTo(points[i].x, points[i].y);
+							ctx.lineTo(points[j].x, points[j].y);
+							ctx.stroke();
+						}
+					}
+					ctx.fillStyle = "rgba(241,239,233,.55)";
+					ctx.beginPath();
+					ctx.arc(points[i].x, points[i].y, 1.6, 0, Math.PI * 2);
+					ctx.fill();
+				}
+				requestAnimationFrame(tick);
+			}
+			window.addEventListener("resize", () => {
+				resize();
+				initPoints();
+			});
+			resize();
+			initPoints();
+			tick();
+
+			// Circular orbit of photos in the hero
+			(function () {
+				const orbit = document.getElementById("orbit");
+				if (!orbit) return;
+				const items = Array.from(orbit.querySelectorAll(".orbit-item"));
+				let angle = 0;
+				let targetTiltX = 0,
+					targetTiltY = 0,
+					tiltX = 0,
+					tiltY = 0;
+
+				window.addEventListener("mousemove", e => {
+					const nx = (e.clientX / window.innerWidth) * 2 - 1;
+					const ny = (e.clientY / window.innerHeight) * 2 - 1;
+					targetTiltY = nx * 18;
+					targetTiltX = -ny * 12;
+				});
+
+				let hovering = null;
+				items.forEach(item => {
+					item.addEventListener(
+						"mouseenter",
+						() => (hovering = item),
+					);
+					item.addEventListener("mouseleave", () => {
+						if (hovering === item) hovering = null;
+					});
+				});
+
+				function tickOrbit() {
+					const rect = orbit.getBoundingClientRect();
+					const radiusX = rect.width * 0.42;
+					const radiusY = rect.height * 0.32;
+					tiltX += (targetTiltX - tiltX) * 0.05;
+					tiltY += (targetTiltY - tiltY) * 0.05;
+
+					angle += 0.0016;
+					items.forEach((item, i) => {
+						if (item === hovering) return; // let CSS hover scale take over, skip repositioning this frame
+						const a = angle + (i / items.length) * Math.PI * 2;
+						const x = Math.cos(a) * radiusX;
+						const y = Math.sin(a) * radiusY;
+						const depthScale = 0.75 + ((Math.sin(a) + 1) / 2) * 0.4; // items toward viewer read larger
+						const z = Math.sin(a);
+						item.style.transform = `translate(${x + tiltY}px, ${y + tiltX}px) scale(${depthScale})`;
+						item.style.zIndex = Math.round((z + 1) * 10);
+						item.style.opacity = 0.55 + ((z + 1) / 2) * 0.45;
+					});
+					requestAnimationFrame(tickOrbit);
+				}
+				tickOrbit();
+			})();
+		</script>
+	</body>
+</html>
